@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quartos no Rio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/*
+VOICE: prático e solar, como um classificado bem feito de bairro.
+IDEA: o calçadão de Copacabana — a onda preto-e-branco vira a moldura da pesquisa.
+PICTURE: a própria ferramenta: painel de preços por bairro com barras e a lista de anúncios.
+COLOUR and TYPE: mar #0a6e78 dominante, branco, tinta preta, acento coral-sol #ff5a3c; Archivo Black + Inter.
+LAYOUT: faixa de onda, título curto, filtros à esquerda e resultados à direita; empilha abaixo de 860px.
+*/
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#0b1416);--ink:light-dark(#111614,#eef4f3);--mut:light-dark(#5b6664,#9db0ae);
+--sea:light-dark(#0a6e78,#3fb6bf);--sea2:light-dark(#e3f3f3,#11272a);--sun:#ff5a3c;--line:light-dark(#dfe7e6,#22373a);--card:light-dark(#fff,#101d20)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:"Archivo Black",Impact,sans-serif;font-weight:400;line-height:1.05;text-wrap:balance;margin:0}
+.wave{height:38px;background:var(--ink);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='38'%3E%3Cpath d='M0 19c15-16 30-16 30 0s15 16 30 0 30-16 30 0 15 16 30 0V38H0z'/%3E%3Cpath d='M0 8c15-12 30-12 30 0s15 12 30 0 30-12 30 0 15 12 30 0V0H0z'/%3E%3C/svg%3E") repeat-x;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='38'%3E%3Cpath d='M0 19c15-16 30-16 30 0s15 16 30 0 30-16 30 0 15 16 30 0V38H0z'/%3E%3Cpath d='M0 8c15-12 30-12 30 0s15 12 30 0 30-12 30 0 15 12 30 0V0H0z'/%3E%3C/svg%3E") repeat-x}
+header{background:var(--sea);color:#fff;padding:28px max(5vw,16px) 26px}
+header h1{font-size:clamp(32px,5vw,50px)}
+header p{margin:8px 0 0;max-width:62ch;opacity:.92}
+.wrap{max-width:1240px;margin:0 auto;padding:24px max(4vw,16px) 48px;display:grid;grid-template-columns:300px minmax(0,1fr);gap:28px;align-items:start}
+@media(max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)}}
+aside{background:var(--sea2);border-radius:14px;padding:18px;display:grid;gap:14px}
+@media(min-width:861px){aside{position:sticky;top:16px}}
+label{font-size:14px;font-weight:600;display:grid;gap:4px}
+input,select,button{font:inherit;font-size:16px}
+input,select{min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);width:100%}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chk{display:flex;align-items:center;gap:10px;font-weight:500;min-height:32px}
+.chk input{width:20px;min-height:20px;accent-color:var(--sea)}
+button{min-height:44px;border:0;border-radius:10px;padding:0 16px;cursor:pointer;font-weight:700}
+.pri{background:var(--sun);color:#fff}.sec{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0 22px}
+@media(max-width:600px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{border-top:4px solid var(--ink);padding-top:8px}
+.kpi b{display:block;font-family:"Archivo Black",sans-serif;font-weight:400;font-size:clamp(22px,3vw,32px);white-space:nowrap}
+.kpi span{font-size:13px;color:var(--mut)}
+.kpi.hi{border-color:var(--sun)}
+.bars{display:grid;gap:6px;margin:12px 0 28px}
+.bar{display:grid;grid-template-columns:130px minmax(0,1fr) 92px;gap:10px;align-items:center;font-size:14px}
+.bar .t{height:22px;background:var(--sea2);border-radius:4px;position:relative;overflow:hidden}
+.bar .t i{position:absolute;inset:0 auto 0 0;background:var(--sea);border-radius:4px;transition:width .5s}
+.bar .t u{position:absolute;top:0;bottom:0;background:light-dark(rgba(10,110,120,.28),rgba(63,182,191,.3));text-decoration:none}
+.bar .v{text-align:right;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bar small{color:var(--mut);font-weight:500}
+@media(max-width:520px){.bar{grid-template-columns:96px minmax(0,1fr) 78px;font-size:13px}}
+.head{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+.head h2{font-size:28px}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:12px}
+.ad{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--card);display:grid;gap:6px}
+.ad .p{font-family:"Archivo Black",sans-serif;font-size:24px;white-space:nowrap}
+.ad .p small{font-family:Inter,sans-serif;font-size:13px;color:var(--mut)}
+.ad h3{font-family:Inter,sans-serif;font-weight:700;font-size:16px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:13px;padding:2px 8px;border-radius:99px;background:var(--sea2)}
+.tag.ok{background:light-dark(#ffe6e0,#3a1d17)}
+.badge{font-size:13px;font-weight:700;color:var(--sun)}
+.ad .x{justify-self:start;min-height:36px;padding:0 10px;font-size:14px}
+.empty{padding:30px;text-align:center;color:var(--mut);border:1px dashed var(--line);border-radius:12px}
+section+section{margin-top:34px}
+.check{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:10px;align-items:end;background:var(--sea2);padding:16px;border-radius:14px;margin-top:12px}
+@media(max-width:700px){.check{grid-template-columns:minmax(0,1fr)}}
+#verdict{margin-top:10px;font-size:17px;min-height:1.6em}
+form.add{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+@media(max-width:700px){form.add{grid-template-columns:minmax(0,1fr)}}
+.note{font-size:13px;color:var(--mut)}
+details{margin-top:14px}summary{cursor:pointer;font-weight:700;min-height:32px}
+textarea{width:100%;min-height:120px;font:13px/1.4 ui-monospace,monospace;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.srch{display:grid;gap:6px}.srch>label{font-size:14px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-height:34px;padding:0 12px;border-radius:99px;font-weight:500;font-size:14px;background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.chip[aria-pressed=true]{background:var(--sea);color:#fff;border-color:var(--sea)}
+.ad h3 a{color:inherit;text-decoration:none}.ad h3 a:hover{text-decoration:underline}
+.go{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;border-radius:10px;padding:0 14px;font-weight:700;text-decoration:none;background:var(--sea);color:#fff}
+.go.alt{background:transparent;color:var(--sea);border:1px solid var(--sea)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:4px}
+footer{background:var(--ink);color:var(--bg);padding:20px max(5vw,16px);font-size:14px}
+@media(prefers-reduced-motion:reduce){.bar .t i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wave" aria-hidden="true"></div>
+<header>
+  <h1>Quanto custa um quarto no Rio?</h1>
+  <p>Pesquise e compare preços de aluguel de quartos em casas e apartamentos compartilhados, bairro por bairro. Filtre, veja a mediana da região e descubra se um anúncio está caro.</p>
+</header>
+
+<div class="wrap">
+  <aside aria-label="Filtros">
+    <div class="srch">
+      <label for="q">Buscar</label>
+      <input id="q" type="search" list="sugList" autocomplete="off" placeholder="Ex.: metrô, varanda, Lapa">
+      <datalist id="sugList"></datalist>
+      <span class="note">Não sabe o que buscar? Experimente:</span>
+      <div class="chips" id="chips"></div>
+    </div>
+    <label>Fonte<select id="fonte"><option value="">Todas</option><option>WebQuarto</option><option>Facebook</option><option>Você</option></select></label>
+    <label>Zona<select id="zona"><option value="">Todas</option></select></label>
+    <label>Bairro<select id="bairro"><option value="">Todos</option></select></label>
+    <label>Tipo de quarto<select id="tipo"><option value="">Todos</option><option>Individual</option><option>Suíte</option><option>Compartilhado</option></select></label>
+    <label>Para quem<select id="para"><option value="">Qualquer</option><option value="T">Todos os públicos</option><option value="M">Só mulheres</option><option value="H">Só homens</option></select></label>
+    <div class="row2">
+      <label>Mín. (R$)<input id="min" type="number" inputmode="numeric" min="0" step="50"></label>
+      <label>Máx. (R$)<input id="max" type="number" inputmode="numeric" min="0" step="50"></label>
+    </div>
+    <label class="chk"><input id="contas" type="checkbox"> Contas inclusas</label>
+    <label class="chk"><input id="mob" type="checkbox"> Mobiliado</label>
+    <label class="chk"><input id="metro" type="checkbox"> Perto do metrô/BRT</label>
+    <label>Ordenar por<select id="ord"><option value="p-asc">Menor preço</option><option value="p-desc">Maior preço</option><option value="bairro">Bairro (A–Z)</option></select></label>
+    <button class="sec" id="limpar" type="button">Limpar filtros</button>
+  </aside>
+
+  <main>
+    <section>
+      <div class="head"><h2>Panorama de preços</h2><span class="note" id="cnt"></span></div>
+      <div class="kpis">
+        <div class="kpi hi"><b id="kMed">–</b><span>mediana do aluguel</span></div>
+        <div class="kpi"><b id="kAvg">–</b><span>média</span></div>
+        <div class="kpi"><b id="kRange">–</b><span>faixa (mín.–máx.)</span></div>
+        <div class="kpi"><b id="kM2">–</b><span>mediana do quarto individual</span></div>
+      </div>
+      <h3 style="font-size:20px">Mediana por bairro</h3>
+      <p class="note" style="margin:4px 0 0">Barra escura = mediana; faixa clara = do mais barato ao mais caro.</p>
+      <div class="bars" id="bars"></div>
+    </section>
+
+    <section>
+      <h2 style="font-size:28px">Esse preço é justo?</h2>
+      <div class="check">
+        <label>Bairro<select id="cB"></select></label>
+        <label>Tipo<select id="cT"><option value="">Qualquer</option><option>Individual</option><option>Suíte</option><option>Compartilhado</option></select></label>
+        <label>Preço pedido (R$)<input id="cP" type="number" inputmode="numeric" min="0" step="50" value="1500"></label>
+        <button class="pri" id="cGo" type="button">Avaliar</button>
+      </div>
+      <div id="verdict" aria-live="polite"></div>
+    </section>
+
+    <section>
+      <div class="head"><h2>Anúncios</h2><span class="note">Anúncios reais do WebQuarto e de grupos públicos do Facebook (publicados de 09 a 23/11/2026). Confirme o valor na página do anúncio; os links do Facebook pedem login.</span></div>
+      <div class="list" id="list"></div>
+    </section>
+
+    <section>
+      <h2 style="font-size:28px">Adicionar um anúncio que você encontrou</h2>
+      <form class="add" id="add">
+        <label>Título<input name="titulo" required placeholder="Quarto em casa com quintal"></label>
+        <label>Bairro<select name="bairro" id="aB" required></select></label>
+        <label>Preço mensal (R$)<input name="preco" type="number" min="100" step="10" required></label>
+        <label>Tipo<select name="tipo"><option>Individual</option><option>Suíte</option><option>Compartilhado</option></select></label>
+        <label>Para quem<select name="para"><option value="T">Todos os públicos</option><option value="M">Só mulheres</option><option value="H">Só homens</option></select></label>
+        <label>Link do anúncio<input name="link" type="url" inputmode="url" placeholder="https://…"></label>
+        <label class="chk"><input name="contas" type="checkbox"> Contas inclusas</label>
+        <label class="chk"><input name="mob" type="checkbox" checked> Mobiliado</label>
+        <label class="chk"><input name="metro" type="checkbox"> Perto do metrô/BRT</label>
+        <button class="pri" type="submit">Salvar anúncio</button>
+      </form>
+      <p class="note" id="saved"></p>
+      <details>
+        <summary>Exportar / importar dados (CSV)</summary>
+        <p class="note">Copie para colar numa planilha, ou cole aqui linhas no mesmo formato e clique em Importar.</p>
+        <textarea id="csv" spellcheck="false"></textarea>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+          <button class="sec" id="copy" type="button">Copiar CSV</button>
+          <button class="sec" id="imp" type="button">Importar CSV</button>
+          <span class="note" id="csvMsg" aria-live="polite"></span>
+        </div>
+      </details>
+    </section>
+  </main>
+</div>
+<footer>Preços em reais por mês, conforme publicados no WebQuarto (webquarto.com.br) em 23/11/2026 e em grupos públicos de aluguel de quartos do Facebook entre 09 e 23/11/2026 (só ofertas de quarto para morar, de R$ 450 a R$ 5.050). Anúncios podem ser alterados ou removidos pelo anunciante; o valor que vale é o da página do anúncio. "Contas inclusas" e "mobiliado" só aparecem quando o anúncio informa.</footer>
+
+<script>
+{
+const ZONAS={"Zona Sul":["Copacabana","Ipanema","Botafogo","Flamengo","Laranjeiras","Cosme Velho","Gávea","São Conrado","Vidigal"],
+"Centro":["Centro","Lapa","Glória","Santa Teresa","São Cristóvão"],
+"Zona Norte":["Tijuca","Maracanã","Vila Isabel","Grajaú","São Francisco Xavier","Alto da Boa Vista","Madureira","Olaria","Jardim Guanabara","Zona Norte (bairro não informado)"],
+"Zona Oeste":["Barra da Tijuca","Recreio dos Bandeirantes","Jacarepaguá","Pechincha","Bangu"]};
+const B2Z={};for(const z in ZONAS)for(const b of ZONAS[z])B2Z[b]=z;
+const BAIRROS=Object.keys(B2Z).sort((a,b)=>a.localeCompare(b,"pt"));
+const TIPO={I:"Individual",S:"Suíte",C:"Compartilhado"},PARA={T:"Todos os públicos",M:"Só mulheres",H:"Só homens"};
+const fmt=n=>"R$ "+Math.round(n).toLocaleString("pt-BR");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $=id=>document.getElementById(id);
+const safeUrl=u=>/^https?:\/\/[^\s]+$/i.test(String(u||"").trim())?String(u).trim():"";
+const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return""}};
+
+// Anúncios reais publicados no WebQuarto (coletados em 23/11/2026)
+// [id, slug, título, bairro, preço, tipo I/S/C, para T/M/H, flags: c=contas inclusas, m=mobiliado]
+const RAW=[
+[115578,"studio-maravilhoso-no-coracao-de-copacabana","Studio maravilhoso no coração de Copacabana","Copacabana",3000,"I","T",""],
+[112859,"suite-be-no-lapa-coliving-residencial-pagou-morou","Suíte - Be No Lapa - Coliving residencial","Centro",2980,"S","T",""],
+[114774,"quarto-em-apartamento-com-piscina-no-flamengo","Quarto em apartamento com piscina no Flamengo","Flamengo",5000,"C","T",""],
+[55525,"alugo-quarto-25m2-individual-tijuca-prox-ao-metro-uruguai","Quarto 25m² individual na Tijuca – próx. ao Metrô Uruguai","Tijuca",1800,"I","T",""],
+[116867,"lartinas-08-coliving-in-copacabana","Lartinas 08 | Coliving em Copacabana","Copacabana",4500,"I","T",""],
+[89113,"suite-em-botafogo","Suíte em Botafogo","Botafogo",2500,"S","M","m"],
+[101903,"quarto-espacoso-na-praia-so-para-mulheres","Quarto espaçoso na praia só para mulheres","Copacabana",4000,"I","M",""],
+[117116,"tijuca-300m-da-estacao-metro-s-pena-vaga-cprivacidad-quarto","Vaga com privacidade a 300m do Metrô Saens Peña","Tijuca",580,"C","M","cm"],
+[116409,"saens-pena-metro-3-m-pe-cvaga-de-quarto","Vaga de quarto a 3 min a pé do Metrô Saens Peña","Tijuca",580,"I","M",""],
+[117083,"tijuca-vaga-de-quarto-a-poucos-passos-do-metro-s-pena","Vaga de quarto a poucos passos do Metrô Saens Peña","Tijuca",580,"C","H",""],
+[68340,"suite-confortavel-mobiliada-em-apartamento-muito-amplo","Suíte confortável, mobiliada, em apartamento amplo","Botafogo",3000,"S","M","cm"],
+[85716,"quarto-amplo-e-ensolarado-no-coracao-de-ipanema","Quarto amplo e ensolarado no coração de Ipanema","Ipanema",3600,"I","T","m"],
+[116050,"quarto-com-espaco-homeoffice-coworking-be-no-lapa-2","Quarto com espaço home office - Be No Lapa 2","Centro",1350,"C","T",""],
+[112303,"quarto-individual-aconchegante","Quarto individual aconchegante","Botafogo",2250,"I","T",""],
+[57295,"ampla-cobertura-aluguel-quartovaga-250m-metro-saens-pena","Cobertura: quarto/vaga a 250m do Metrô Saens Peña","Tijuca",580,"C","M","m"],
+[117129,"vaga-acortinada-em-quarto-equipado-metro-saens-pena-300m","Vaga acortinada em quarto equipado (Metrô Saens Peña 300m)","Tijuca",580,"C","H","cm"],
+[117137,"300m-metro-vaga-acortinada-em-quarto-dividido-s-pena-tijuca","Vaga acortinada em quarto dividido, 300m do metrô","Tijuca",580,"C","H","cm"],
+[110465,"quarto-individual-sao-cristovao","Quarto individual em São Cristóvão","São Cristóvão",1300,"I","T",""],
+[115126,"300m-metro-residencia-dividida-cvaga-de-quarto-tijuca-sa-pe","Residência dividida com vaga, 300m do metrô","Tijuca",580,"C","M",""],
+[115808,"studio-maravilhoso-em-laranjeiras","Studio em Laranjeiras (A Porta Secreta)","Laranjeiras",3000,"I","T",""],
+[117052,"studio-maravilhoso-em-laranjeiras","Studio em Laranjeiras (Reino da Rainha)","Laranjeiras",3500,"I","T",""],
+[111554,"quarto-mobiliado-em-apartamento-no-grajau","Quarto mobiliado em apartamento no Grajaú","Vila Isabel",1150,"I","H","m"],
+[107050,"quarto-individual-metro-saens-pena","Quarto individual perto do Metrô Saens Peña","Maracanã",980,"I","T","m"],
+[78547,"quarto-individual-casa-confortavel","Quarto individual - casa confortável","Botafogo",1750,"I","H",""],
+[29000,"casa-da-selva","Casa da Selva","Alto da Boa Vista",1050,"S","T","m"],
+[116096,"suite-enorme-5min-afonso-pena","Suíte enorme a 5 min do Metrô Afonso Pena","Tijuca",2100,"S","T","c"],
+[102908,"quarto-com-banheiro-privativo","Quarto com banheiro privativo","Pechincha",500,"I","M","m"],
+[94222,"alugo-quarto-30m2-individual-tijuca-prox-ao-metro-uruguai","Quarto 30m² individual na Tijuca – próx. ao Metrô Uruguai","Tijuca",2000,"I","T",""],
+[75554,"grajau-quarto-ar-ref-tvcabo-e-frigobar","Quarto com ar, TV a cabo e frigobar","Grajaú",1800,"I","T","m"],
+[113843,"quarto-individual-com-banheiro-privativo-jardim-guanabara","Quarto individual com banheiro privativo","Jardim Guanabara",1500,"I","T",""],
+[115022,"quarto-5-min-afonso-pena","Quarto a 5 min do Metrô Afonso Pena","Tijuca",1300,"I","T","m"],
+[61190,"imperdivel-casa-no-coracao-do-humaita-leia-a-descricao","Quarto em casa no coração do Humaitá","Botafogo",2100,"I","T",""],
+[83678,"quarto-para-moca-em-casa-familiar","Quarto para moça em casa familiar","Madureira",590,"I","M",""],
+[116365,"quarto-compartilhado-em-casa-no-maracana-rio","Quarto compartilhado em casa no Maracanã","Maracanã",550,"C","H","cm"],
+[112186,"quartos-mobiliados-individuais-parque-da-cidade-na-gavea","Quartos mobiliados no Parque da Cidade","Gávea",1000,"C","T","m"],
+[6912,"republica-das-preciosas-rep-feminina-em-fr-a-uerj-maracana","República das Preciosas - feminina, em frente à UERJ","Maracanã",650,"C","M","cm"],
+[29725,"republica-das-charmosas-rep-fem-em-frente-a-uerj-maracana","República das Charmosas - feminina, em frente à UERJ","Maracanã",650,"C","M",""],
+[9596,"alugo-quarto-suite-proximo-uerj","Quarto suíte próximo à UERJ","Vila Isabel",1400,"S","T","m"],
+[116030,"hospedagem-para-mulheres-no-recreio-dos-bandeirantes","Hospedagem para mulheres no Recreio","Recreio dos Bandeirantes",1800,"I","M","m"],
+[19671,"suite-em-jacarepagua-pechincha","Suíte em Jacarepaguá - Pechincha","Pechincha",1400,"S","T","m"],
+[115378,"quarto-individual-zona-sul-rio-de-janeiro-laranjeiras","Quarto na Zona Sul - Laranjeiras","Laranjeiras",1500,"C","M",""],
+[100289,"aluguel-de-quarto","Aluguel de quarto em Botafogo","Botafogo",3500,"I","M",""],
+[116059,"quarto-aconchegante-na-porta-do-metro-de-sao-conrado","Quarto aconchegante na porta do Metrô de São Conrado","São Conrado",2400,"I","M",""],
+[99882,"lartinas-coliving-02-quarto-privativo-para-mulheres-em-cop","Lartinas Coliving 02 | Quarto privativo para mulheres","Copacabana",3500,"I","M",""],
+[27693,"quarto-em-casa-de-mulheres-compartilhada","Quarto em casa compartilhada de mulheres","Santa Teresa",1200,"I","M",""],
+[93376,"quarto-cama-de-casal-na-barra-da-tijuca","Quarto com cama de casal na Barra da Tijuca","Barra da Tijuca",3000,"I","T",""],
+[55523,"alugo-quartos-individuais-na-tijuca-prox-ao-metro-uruguai","Quartos individuais na Tijuca – próx. ao Metrô Uruguai","Tijuca",2300,"I","T",""],
+[110866,"quarto-economico-copacabana-mystic-flat","Quarto econômico - Copacabana Mystic Flat","Copacabana",2650,"I","T",""],
+[57409,"quarto-na-gloria-amploarejado-melhor-coliving-do-rio","Quarto amplo e arejado em coliving na Glória","Glória",2850,"I","T",""],
+[111805,"lartinas-coliving-06-quartos-e-suite-em-apartamento-misto","Lartinas Coliving 06 | Quartos e suíte em apto misto","Copacabana",3500,"I","T",""],
+[89740,"quarto-individual","Quarto individual em Olaria","Olaria",990,"I","T",""],
+[36220,"quarto-individual-mobiliado-em-botafogo-rio-de-janeiro","Quarto individual mobiliado em Botafogo","Botafogo",2000,"I","M","m"],
+[78563,"lartinas-cobertura-cheia-de-arte-e-afeto","Lartinas - cobertura cheia de arte e afeto","Copacabana",3500,"I","M",""],
+[114149,"quarto-individual-proximo-a-uerj-somente-mulheres","Quarto individual próximo à UERJ (só mulheres)","São Francisco Xavier",980,"I","M",""],
+[115038,"ipanema-2a-quadra","Quarto em Ipanema, 2ª quadra da praia","Ipanema",2600,"I","M",""],
+[19374,"suite-disponivel-cozinha-indepente-disponivel-01122026","Suíte com cozinha independente (disponível 01/12)","Maracanã",1200,"S","M",""],
+[108529,"excelente-quarto-individual-em-cobertura-posto-5-copacabana","Quarto individual em cobertura - Posto 5","Copacabana",2500,"I","T",""],
+[109771,"quarto-mobiliado-rua-sem-saida-perto-do-metro-tijuca","Quarto mobiliado em rua sem saída perto do metrô","Tijuca",2000,"I","T","m"],
+[8481,"quarto-vista-verdemar-be-no-gloria-residencial-coliving","Quarto vista verde/mar - Be No Glória coliving","Glória",3350,"I","T",""],
+[113004,"be-no-lapa-q5-coliving-residencial-liberdadevisitas","Be No Lapa - Q5 - Coliving residencial","Centro",2200,"I","T",""],
+[93995,"quarto-individual-vista-pro-mar","Quarto individual com vista pro mar","Vidigal",3000,"I","T",""],
+[116381,"coliving-com-quarto-individual-no-flamengo-rio-be-no","Coliving com quarto individual no Flamengo - Be No","Flamengo",3300,"I","T","m"],
+[71822,"quarto-banheiro-mobilia-simples-wi-fi","Quarto com banheiro, mobília simples e Wi-Fi","Bangu",970,"I","T","m"],
+[25926,"kitnet-suite-independente-silencioso-vista-verde","Kitnet/suíte independente, silenciosa, vista verde","Cosme Velho",2000,"S","M",""],
+[112963,"kitinete-mobiliada-so-para-homens-na-rua-da-praia-recreio","Kitinete mobiliada na rua da praia (só homens)","Recreio dos Bandeirantes",1700,"I","H","m"],
+[114295,"flat-a-2-minutos-da-praia-posto-12-recreio","Flat a 2 min da praia - Posto 12 Recreio","Recreio dos Bandeirantes",1999,"C","T","c"],
+[113005,"quarto-lindo-vista-verde-be-no-bairro-de-fatima-lapa","Quarto vista verde - Be No Bairro de Fátima/Lapa","Centro",2980,"I","T",""],
+[94070,"quarto-individual-1600-10min-metro","Quarto individual a 10 min do metrô","Tijuca",1600,"I","T","m"],
+[107460,"um-lar-familiar","Um lar familiar","Tijuca",1250,"I","M",""],
+[85819,"quarto-10","Quarto 10","Flamengo",3000,"I","T",""]];
+const REAL=RAW.map(([id,slug,titulo,bairro,preco,t,para,f])=>({id:"w"+id,titulo,bairro,preco,tipo:TIPO[t],para,contas:f.includes("c"),mob:f.includes("m"),
+  metro:/metr[ôo]|saens|afonso pena|uruguai/i.test(titulo+" "+slug),link:`https://www.webquarto.com.br/quarto/${id}/${slug}`,fonte:"WebQuarto",user:false}));
+
+// Ofertas de quarto em grupos públicos do Facebook, publicadas entre 09/11 e 23/11/2026
+// [grupo, post, título, bairro, preço, tipo, para, flags (c=contas inclusas, m=mobiliado, t=metrô), data]
+const FB_RAW=[
+["202389463287639","3255865857939969","Quarto compartilhado com ar e internet na Rua Alice","Laranjeiras",750,"C","T","c","2026-11-23"],
+["199227843763704","3075527992800327","Vaga em quarto para meninas, apê dividido por 3 (+ contas)","Zona Norte (bairro não informado)",500,"C","M","m","2026-11-19"],
+["199227843763704","3075527039467089","Vaga em quarto para meninas, apê dividido por 3 (+ contas)","Zona Norte (bairro não informado)",600,"C","M","m","2026-11-19"],
+["199227843763704","3073738552979271","Suíte em coliving na Lapa (+ contas)","Lapa",2980,"S","T","","2026-11-18"],
+["199227843763704","3072764509743342","Quarto amplo em coliving perto do metrô Flamengo (+ contas)","Flamengo",3350,"I","T","t","2026-11-17"],
+["199227843763704","3072485266437933","Quarto em apê para mulheres perto dos estúdios","Jacarepaguá",1750,"I","M","c","2026-11-17"],
+["1498550510407627","4498837693712212","Suíte com vista mar e banheiro privativo, para moça","Barra da Tijuca",2120,"S","M","c","2026-11-16"],
+["1498550510407627","4491443611118287","Quarto grande com vista, mudança imediata","Glória",3450,"I","T","","2026-11-14"],
+["576547035794799","29603002429389207","Quarto individual com cama de casal, perto do metrô Afonso Pena","Tijuca",1340,"I","M","mt","2026-11-13"],
+["199227843763704","3066029627083497","Quarto espaçoso em apê compartilhado, entrada imediata","Vila Isabel",1350,"I","T","m","2026-11-12"],
+["199227843763704","3065352883817838","Vaga em república mista no Centro","Centro",500,"C","T","cmt","2026-11-12"],
+["576547035794799","29584732347882882","Quarto reservado entre Santa Teresa e Catumbi","Santa Teresa",900,"I","T","cm","2026-11-12"],
+["576547035794799","29570634582625992","Quarto com cama de solteiro, perto do metrô Afonso Pena","Tijuca",840,"I","M","mt","2026-11-11"],
+["1498550510407627","4491253057804009","Quarto individual para alugar em Copacabana","Copacabana",1000,"I","T","","2026-11-11"],
+["1498550510407627","4489088898020425","Quarto amplo individual perto do metrô Flamengo","Flamengo",1420,"I","M","ct","2026-11-09"],
+["202389463287639","3234446160081939","Quarto individual em casa perto da UERJ","Vila Isabel",1250,"I","M","","2026-11-09"]];
+const FB=FB_RAW.map(([g,p,titulo,bairro,preco,t,para,f,data])=>({id:"f"+p,titulo,bairro,preco,tipo:TIPO[t],para,contas:f.includes("c"),mob:f.includes("m"),metro:f.includes("t"),
+  link:`https://www.facebook.com/groups/${g}/posts/${p}/`,fonte:"Facebook",data,user:false}));
+REAL.push(...FB);
+const fdata=d=>d?d.slice(8,10)+"/"+d.slice(5,7):"";
+
+let mine=[];try{mine=JSON.parse(localStorage.getItem("quartosRio2")||"[]")}catch(e){}
+const save=()=>{try{localStorage.setItem("quartosRio2",JSON.stringify(mine))}catch(e){}};
+const all=()=>[...mine,...REAL];
+const hay=a=>[a.titulo,a.fonte,a.bairro,B2Z[a.bairro],a.tipo,PARA[a.para],a.contas?"contas inclusas":"",a.mob?"mobiliado":"",a.metro?"metrô perto do metrô":"",/cowork|home ?office/i.test(a.titulo)?"home office":"",/coliving|be no|lartinas/i.test(a.titulo)?"coliving":"",/rep[úu]blica|vaga/i.test(a.titulo)?"república vaga":"",/praia|posto|orla/i.test(a.titulo)?"perto da praia":"",/uerj/i.test(a.titulo)?"uerj universidade":""].join(" ").toLowerCase();
+
+$("zona").innerHTML+=Object.keys(ZONAS).map(z=>`<option>${z}</option>`).join("");
+const fillB=z=>{$("bairro").innerHTML='<option value="">Todos</option>'+BAIRROS.filter(b=>!z||B2Z[b]===z).map(b=>`<option>${b}</option>`).join("")};
+fillB("");
+const opts=BAIRROS.map(b=>`<option>${b}</option>`).join("");$("cB").innerHTML=opts;$("aB").innerHTML=opts;$("cB").value="Tijuca";
+
+const med=a=>{if(!a.length)return 0;const s=[...a].sort((x,y)=>x-y),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2};
+
+const F=["q","fonte","zona","bairro","tipo","para","min","max","contas","mob","metro","ord"];
+try{const st=JSON.parse(localStorage.getItem("quartosRioFiltros2")||"{}");if(st.zona){$("zona").value=st.zona;fillB(st.zona)}
+  F.forEach(k=>{if(st[k]!==undefined){const el=$(k);el.type==="checkbox"?el.checked=st[k]:el.value=st[k]}})}catch(e){}
+
+function filtered(){
+  const fo=$("fonte").value;
+  const q=$("q").value.trim().toLowerCase(),z=$("zona").value,b=$("bairro").value,t=$("tipo").value,p=$("para").value,
+  mn=+$("min").value||0,mx=+$("max").value||Infinity;
+  let r=all().filter(a=>(!fo||(fo==="Você"?a.user:a.fonte===fo))&&(!z||B2Z[a.bairro]===z)&&(!b||a.bairro===b)&&(!t||a.tipo===t)&&(!p||a.para===p)&&a.preco>=mn&&a.preco<=mx
+    &&(!$("contas").checked||a.contas)&&(!$("mob").checked||a.mob)&&(!$("metro").checked||a.metro)
+    &&(!q||q.split(/\s*,\s*/).filter(Boolean).every(w=>hay(a).includes(w))));
+  const o=$("ord").value;
+  r.sort(o==="p-asc"?(a,b)=>a.preco-b.preco:o==="p-desc"?(a,b)=>b.preco-a.preco:(a,b)=>a.bairro.localeCompare(b.bairro,"pt")||a.preco-b.preco);
+  return r}
+
+function render(){
+  const st={};F.forEach(k=>{const el=$(k);st[k]=el.type==="checkbox"?el.checked:el.value});
+  try{localStorage.setItem("quartosRioFiltros2",JSON.stringify(st))}catch(e){}
+  const r=filtered(),ps=r.map(a=>a.preco),ind=r.filter(a=>a.tipo==="Individual").map(a=>a.preco);
+  $("cnt").textContent=r.length+(r.length===1?" anúncio":" anúncios");
+  $("kMed").textContent=r.length?fmt(med(ps)):"–";
+  $("kAvg").textContent=r.length?fmt(ps.reduce((s,x)=>s+x,0)/ps.length):"–";
+  $("kRange").textContent=r.length?fmt(Math.min(...ps)).replace("R$ ","")+"–"+fmt(Math.max(...ps)).replace("R$ ",""):"–";
+  $("kM2").textContent=ind.length?fmt(med(ind)):"–";
+  const g={};r.forEach(a=>(g[a.bairro]??=[]).push(a.preco));
+  const rows=Object.entries(g).map(([b,v])=>({b,m:med(v),lo:Math.min(...v),hi:Math.max(...v),n:v.length})).sort((x,y)=>y.m-x.m);
+  const top=Math.max(1,...rows.map(x=>x.hi));
+  $("bars").innerHTML=rows.length?rows.map(x=>`<div class="bar"><span>${esc(x.b)} <small>(${x.n})</small></span>
+    <div class="t" title="${fmt(x.lo)} a ${fmt(x.hi)}"><u style="left:${x.lo/top*100}%;width:${(x.hi-x.lo)/top*100}%"></u><i style="width:${x.m/top*100}%"></i></div>
+    <span class="v">${fmt(x.m)}</span></div>`).join(""):'<div class="empty">Nenhum bairro com anúncios nesses filtros.</div>';
+  $("list").innerHTML=r.length?r.map(a=>{
+    const bm=med(all().filter(x=>x.bairro===a.bairro&&x.tipo===a.tipo).map(x=>x.preco)),d=bm?(a.preco-bm)/bm:0;
+    const url=safeUrl(a.link);
+    const acts=url?`<a class="go" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Ver anúncio${host(url)?" no "+esc(host(url)):""} ↗</a>`:`<span class="note">Sem link salvo para este anúncio.</span>`;
+    return `<article class="ad"><div class="p">${fmt(a.preco)} <small>/mês</small></div>
+    <h3>${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(a.titulo)}</a>`:esc(a.titulo)}</h3>
+    <div class="note">${esc(a.bairro)} · ${esc(B2Z[a.bairro]||"")} · ${esc(PARA[a.para]||"")}</div>
+    <div class="tags"><span class="tag">${esc(a.tipo)}</span>${a.contas?'<span class="tag ok">contas inclusas</span>':""}${a.mob?'<span class="tag">mobiliado</span>':""}${a.metro?'<span class="tag">perto do metrô</span>':""}</div>
+    ${d<-.12?'<span class="badge">Abaixo da mediana do bairro</span>':d>.15?'<span class="note">Acima da mediana do bairro</span>':""}
+    <span class="note">${a.user?"Adicionado por você":a.fonte==="Facebook"?"Grupo do Facebook · publicado em "+fdata(a.data):"WebQuarto · preço visto em 23/11/2026"}</span>
+    <div class="acts">${acts}${a.user?`<button class="sec x" data-del="${esc(a.id)}" type="button">Remover</button>`:""}</div></article>`}).join("")
+    :'<div class="empty">Nenhum anúncio encontrado. Tente ampliar a faixa de preço ou limpar os filtros.</div>';
+  $("csv").value=toCSV()}
+
+function avaliar(){
+  const b=$("cB").value,t=$("cT").value,p=+$("cP").value;
+  const v=all().filter(a=>a.bairro===b&&(!t||a.tipo===t)).map(a=>a.preco);
+  if(!p){$("verdict").textContent="Informe o preço pedido.";return}
+  if(v.length<2){$("verdict").textContent="Poucos anúncios desse tipo em "+b+" para comparar. Tente outro tipo ou adicione anúncios.";return}
+  const m=med(v),pct=Math.round(v.filter(x=>x<p).length/v.length*100),d=Math.round((p-m)/m*100);
+  const tom=d<=-10?"Bom preço":d<=10?"Preço na média":d<=25?"Um pouco caro":"Caro";
+  $("verdict").innerHTML=`<strong>${tom}.</strong> ${fmt(p)} está ${Math.abs(d)}% ${d>=0?"acima":"abaixo"} da mediana de ${esc(b)} (${fmt(m)}) e é mais caro que ${pct}% dos ${v.length} anúncios comparados.`}
+
+const COLS=["titulo","bairro","preco","tipo","para","contas","mob","metro","link"];
+function toCSV(){return COLS.join(";")+"\n"+mine.map(a=>COLS.map(c=>typeof a[c]==="boolean"?(a[c]?"sim":"não"):String(a[c]??"").replace(/[;\n]/g,",")).join(";")).join("\n")}
+
+$("add").addEventListener("submit",e=>{e.preventDefault();const f=new FormData(e.target);
+  mine.unshift({id:"u"+Date.now(),titulo:f.get("titulo").trim(),bairro:f.get("bairro"),preco:+f.get("preco"),tipo:f.get("tipo"),para:f.get("para")||"T",
+    contas:!!f.get("contas"),mob:!!f.get("mob"),metro:!!f.get("metro"),link:safeUrl(f.get("link")),user:true});
+  save();e.target.reset();$("saved").textContent="Anúncio salvo neste navegador.";render()});
+$("list").addEventListener("click",e=>{const id=e.target.dataset?.del;if(!id)return;mine=mine.filter(a=>a.id!==id);save();render()});
+$("zona").addEventListener("change",()=>{fillB($("zona").value);render()});
+F.filter(k=>k!=="zona").forEach(k=>$(k).addEventListener("input",render));
+$("limpar").addEventListener("click",()=>{F.forEach(k=>{const el=$(k);el.type==="checkbox"?el.checked=false:el.value=k==="ord"?"p-asc":""});fillB("");render();paintChips()});
+$("cGo").addEventListener("click",avaliar);$("cP").addEventListener("keydown",e=>{if(e.key==="Enter")avaliar()});
+$("copy").addEventListener("click",async()=>{try{await navigator.clipboard.writeText($("csv").value);$("csvMsg").textContent="Copiado."}catch(e){$("csv").select();$("csvMsg").textContent="Selecione e copie manualmente."}});
+$("imp").addEventListener("click",()=>{const ls=$("csv").value.trim().split("\n").slice(1);let n=0;mine=[];
+  ls.forEach((l,i)=>{const c=l.split(";");if(c.length<4||!B2Z[c[1]])return;
+    mine.push({id:"u"+Date.now()+i,titulo:c[0],bairro:c[1],preco:+c[2]||0,tipo:c[3]||"Individual",para:c[4]||"T",contas:c[5]==="sim",mob:c[6]==="sim",metro:c[7]==="sim",link:safeUrl(c[8]),user:true});n++});
+  save();$("csvMsg").textContent=n+" anúncio(s) importado(s).";render()});
+
+// sugestões de busca
+const SUG=["Facebook","perto do metrô","contas inclusas","suíte","mobiliado","coliving","república","perto da praia","UERJ","home office","Zona Sul","Tijuca","Copacabana","Botafogo","Centro"];
+$("sugList").innerHTML=[...new Set([...SUG,...BAIRROS,...Object.keys(ZONAS),"só mulheres","só homens"])].map(s=>`<option value="${esc(s)}">`).join("");
+const terms=()=>$("q").value.split(/\s*,\s*/).map(s=>s.trim().toLowerCase()).filter(Boolean);
+function paintChips(){const t=terms();$("chips").querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",t.includes(c.dataset.s.toLowerCase())))}
+$("chips").innerHTML=SUG.slice(0,10).map(s=>`<button type="button" class="chip" data-s="${esc(s)}" aria-pressed="false">${esc(s)}</button>`).join("");
+$("chips").addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;
+  const s=c.dataset.s,t=$("q").value.split(/\s*,\s*/).map(x=>x.trim()).filter(Boolean),i=t.findIndex(x=>x.toLowerCase()===s.toLowerCase());
+  i>=0?t.splice(i,1):t.push(s);$("q").value=t.join(", ");paintChips();render()});
+$("q").addEventListener("input",paintChips);
+render();avaliar();paintChips();
+}
+</script>
+</body>
+</html>
